@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
-const Admin = require('../models/admins');
+const Admin = require('models/admins');
 const config = require('config');
-const successHandler = require('../service/successHandler');
-const errorHandler = require('../service/errorHandler');
-const asyncErrorHandler = require('../service/asyncErrorHandler');
+const successHandler = require('service/successHandler');
+const errorHandler = require('service/errorHandler');
+const asyncErrorHandler = require('service/asyncErrorHandler');
 
 const isAuth = asyncErrorHandler(async (req, res, next) => {
   let token;

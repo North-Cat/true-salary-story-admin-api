@@ -3,9 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('config/database');
-const adminsRouter = require('./routes/admins');
-const notFoundHandler = require('../service/notFoundHandler');
-const globalErrorHandler = require('../service/globalErrorHandler');
+const adminsRouter = require('routes/admins');
+const notFoundHandler = require('service/notFoundHandler');
+const globalErrorHandler = require('service/globalErrorHandler');
 
 const app = express();
 connectDB();
