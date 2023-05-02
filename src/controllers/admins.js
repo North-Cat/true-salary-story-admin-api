@@ -37,6 +37,9 @@ const admins = {
     }
     generateJWT(data, res);
   },
+  async logOut(req, res) {
+    successHandler(res, '已登出');
+  }
 };
 
 module.exports = admins;
