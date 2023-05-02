@@ -10,6 +10,7 @@ const globalErrorHandler = require('service/globalErrorHandler');
 const app = express();
 connectDB();
 app.use(cors());
+app.use(express.json());
 app.use('/admin', adminsRouter);
 app.use(notFoundHandler);
 app.use(globalErrorHandler);
