@@ -4,6 +4,7 @@ const Admin = require('models/admins');
 const admins = {
   async login(req, res) {},
   async logout(req, res) {},
+  async getUnconfirmedPost(req, res) {},
 };
 
 module.exports = admins;
