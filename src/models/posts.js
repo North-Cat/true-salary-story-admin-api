@@ -83,7 +83,7 @@ const postSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['待審核', '已通過', '已拒絕', '已下架'],
+    enum: ['pending', 'approved', 'rejected', 'removed'],
   },
   createdAt: {
     type: Date,
