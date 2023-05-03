@@ -9,6 +9,7 @@ const admins = {
     const posts = await Post.find({ status: 'pending' }).sort('createdAt');
     successHandler(res, posts);
   },
+  // TODO: 確認是否要寫入updateDate, updateUser...
   async confirmPost(req, res, next) {
     const postId = req.body?.postId;
     const status = req.body?.status;
@@ -37,6 +38,14 @@ const admins = {
     } else {
       return next(errorHandler(400, '查無此id, 更新失敗'));
     }
+  },
+  async getConfirmedPosts(req, res) {
+    const posts = await Post.find({ status: { $ne: 'pending' } })
+      .select(
+        'postId title companyName taxId type status rejectReason createdAt updateDate updateUser',
+      )
+      .sort('createdAt');
+    successHandler(res, posts);
   },
 };
 

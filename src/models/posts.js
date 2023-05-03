@@ -85,10 +85,27 @@ const postSchema = new mongoose.Schema({
     type: String,
     enum: ['pending', 'approved', 'rejected', 'removed'],
   },
+  rejectReason: {
+    type: String,
+    required: function () {
+      return this.status === 'rejected';
+    },
+  },
   createdAt: {
     type: Date,
     default: Date.now,
-    select: false,
+    select: false
+  },
+  createDate: {
+    type: Date,
+    default: Date.now,
+  },
+  updateDate: {
+    type: Date,
+    default: Date.now,
+  },
+  updateUser: {
+    type: String,
   },
 });
 
