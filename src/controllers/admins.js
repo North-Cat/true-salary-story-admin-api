@@ -19,11 +19,25 @@ const admins = {
     if (status !== 'approved' || status !== 'rejected') {
       return next(errorHandler(400, '審核狀態只能是「已通過」或「已拒絕」'));
     }
+    const data = {
+      postId,
+      status,
+    };
     if (status === 'rejected' && !rejectReason) {
-      return next(errorHandler(400, '未填寫拒絕原因'));
+      if (!rejectReason) {
+        return next(errorHandler(400, '未填寫拒絕原因'));
+      }
+      data.rejectReason = rejectReason;
     }
-    // TODO:
-  }
+    const thePost = await Post.findOneAndUpdate(data.postId, data, {
+      new: true,
+    });
+    if (thePost) {
+      successHandler(res, thePost);
+    } else {
+      return next(errorHandler(400, '查無此id, 更新失敗'));
+    }
+  },
 };
 
 module.exports = admins;
