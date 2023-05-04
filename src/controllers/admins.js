@@ -37,7 +37,7 @@ const admins = {
       }
       data.rejectReason = rejectReason;
     }
-    const thePost = await Post.findOneAndUpdate(data.postId, data, {
+    const thePost = await Post.findOneAndUpdate({ postId: data.postId }, data, {
       new: true,
     });
     if (thePost) {
@@ -57,6 +57,28 @@ const admins = {
       })
       .sort('createdAt');
     successHandler(res, posts);
+  },
+  async removePost(req, res, next) {
+    const postId = req.body?.postId;
+    const rejectReason = req.body?.rejectReason;
+    if (!postId || !rejectReason) {
+      return next(errorHandler(400, '欄位未填寫正確'));
+    }
+    const data = {
+      postId,
+      rejectReason,
+      updateDate: new Date().toISOString(),
+      updateUser: req.user,
+      status: 'removed',
+    };
+    const thePost = await Post.findOneAndUpdate({ postId: data.postId }, data, {
+      new: true,
+    });
+    if (thePost) {
+      successHandler(res, thePost);
+    } else {
+      return next(errorHandler(400, '查無此id, 更新失敗'));
+    }
   },
 };
 
