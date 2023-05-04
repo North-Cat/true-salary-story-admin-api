@@ -94,7 +94,7 @@ const postSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    select: false
+    select: false,
   },
   createDate: {
     type: Date,
@@ -105,7 +105,8 @@ const postSchema = new mongoose.Schema({
     default: Date.now,
   },
   updateUser: {
-    type: String,
+    type: mongoose.Schema.ObjectId,
+    ref: 'Admin',
   },
 });
 

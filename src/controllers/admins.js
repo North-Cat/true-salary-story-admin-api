@@ -5,6 +5,11 @@ const Post = require('models/posts');
 const admins = {
   async login(req, res) {},
   async logout(req, res) {},
+  // TODO: for 測試用, 之後移除
+  async createPost(req, res) {
+    const newPost = await Post.create(req.body);
+    successHandler(res, newPost);
+  },
   async getUnconfirmedPosts(req, res) {
     const posts = await Post.find({ status: 'pending' }).sort('createdAt');
     successHandler(res, posts);
@@ -17,14 +22,16 @@ const admins = {
     if (!postId || !status) {
       return next(errorHandler(400, '欄位未填寫正確'));
     }
-    if (status !== 'approved' || status !== 'rejected') {
+    if (status !== 'approved' && status !== 'rejected') {
       return next(errorHandler(400, '審核狀態只能是「已通過」或「已拒絕」'));
     }
     const data = {
       postId,
       status,
+      updateDate: new Date().toISOString(),
+      updateUser: req.user,
     };
-    if (status === 'rejected' && !rejectReason) {
+    if (status === 'rejected') {
       if (!rejectReason) {
         return next(errorHandler(400, '未填寫拒絕原因'));
       }
@@ -44,6 +51,10 @@ const admins = {
       .select(
         'postId title companyName taxId type status rejectReason createdAt updateDate updateUser',
       )
+      .populate({
+        path: 'updateUser',
+        select: 'account', // TODO: 確認還是要另外加name
+      })
       .sort('createdAt');
     successHandler(res, posts);
   },

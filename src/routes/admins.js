@@ -7,6 +7,7 @@ const {
   getUnconfirmedPosts,
   confirmPost,
   getConfirmedPosts,
+  createPost,
 } = require('controllers/admins');
 const { isAuth } = require('service/auth');
 router.post('/login', asyncErrorHandler(login));
@@ -14,4 +15,6 @@ router.post('/logout', isAuth, asyncErrorHandler(logout));
 router.get('/unconfirmedPosts', isAuth, asyncErrorHandler(getUnconfirmedPosts));
 router.get('/confirmedPosts', isAuth, asyncErrorHandler(getConfirmedPosts));
 router.post('/confirmPost', isAuth, asyncErrorHandler(confirmPost));
+// TODO: for 測試用, 之後移除
+router.post('/createPost', asyncErrorHandler(createPost));
 module.exports = router;
