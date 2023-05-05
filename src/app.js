@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('config/database');
 const adminsRouter = require('routes/admins');
+const keywordsRouter = require('routes/keywords');
 const notFoundHandler = require('service/notFoundHandler');
 const globalErrorHandler = require('service/globalErrorHandler');
 
@@ -12,6 +13,7 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 app.use('/admin', adminsRouter);
+app.use('/keywords', keywordsRouter);
 app.use(notFoundHandler);
 app.use(globalErrorHandler);
 
