@@ -50,7 +50,6 @@ const admins = {
     const posts = await Post.find({ status: 'pending' }).sort('createdAt');
     successHandler(res, posts);
   },
-  // TODO: 確認是否要寫入updateDate, updateUser...
   async confirmPost(req, res, next) {
     const postId = req.body?.postId;
     const status = req.body?.status;
@@ -89,7 +88,7 @@ const admins = {
       )
       .populate({
         path: 'updateUser',
-        select: 'account', // TODO: 確認還是要另外加name
+        select: 'account',
       })
       .sort('createdAt');
     successHandler(res, posts);
