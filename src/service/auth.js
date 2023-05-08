@@ -36,7 +36,7 @@ const generateJWT = (user, res) => {
   });
   successHandler(res, {
     token,
-    name: user.name,
+    account: user.account,
   });
 };
 
