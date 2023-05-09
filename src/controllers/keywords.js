@@ -2,6 +2,11 @@ const successHandler = require('service/successHandler');
 const errorHandler = require('service/errorHandler');
 const Keyword = require('models/keywords');
 const keywords = {
+  // TODO: for 測試用, 之後移除
+  async createKeyword(req, res) {
+    const newKeyword = await Keyword.create(req.body);
+    successHandler(res, newKeyword);
+  },
   async getKeywords(req, res) {
     const startDate = req.query?.startDate;
     const endDate = req.query?.endDate;
@@ -17,7 +22,17 @@ const keywords = {
       query.publishDate = query.publishDate || {};
       query.publishDate.$lte = end;
     }
-    const keywords = await Keyword.find(query).sort('rank');
+    const results = await Keyword.find(query).sort('rank');
+    const keywords = results.map((el) => {
+      const trimmedPublishDate = new Date(el.publishDate)
+        .toISOString()
+        .substring(0, 10);
+      const plainDataWithoutMongooseProperties = el.toObject();
+      return {
+        ...plainDataWithoutMongooseProperties,
+        publishDate: trimmedPublishDate,
+      };
+    });
     successHandler(res, keywords);
   },
 };

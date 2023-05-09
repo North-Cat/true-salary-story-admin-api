@@ -39,7 +39,7 @@ const admins = {
   },
   async logOut(req, res) {
     successHandler(res, '已登出');
-  }
+  },
 };
 
 module.exports = admins;
