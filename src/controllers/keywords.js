@@ -35,6 +35,37 @@ const keywords = {
     });
     successHandler(res, keywords);
   },
+  async editKeywordStatus(req, res, next) {
+    const id = req.params?.id;
+    const status = req.body?.status;
+    if (status === '') {
+      return next(errorHandler(400, '未填寫關鍵字狀態'));
+    }
+    if (typeof status !== 'number') {
+      return next(errorHandler(400, '關鍵字格式不正確'));
+    }
+    const theKeyword = await Keyword.findByIdAndUpdate(
+      id,
+      { status },
+      {
+        new: true,
+      },
+    );
+    if (theKeyword) {
+      successHandler(res, theKeyword);
+    } else {
+      return next(errorHandler(400, '查無此id, 更新失敗'));
+    }
+  },
+  async deleteKeyword(req, res, next) {
+    const id = req.params?.id;
+    const theKeyword = await Keyword.findByIdAndDelete(id);
+    if (theKeyword) {
+      successHandler(res, {});
+    } else {
+      return next(errorHandler(400, '查無此id, 更新失敗'));
+    }
+  },
 };
 
 module.exports = keywords;
