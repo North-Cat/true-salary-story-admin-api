@@ -8,7 +8,7 @@ const {
   editKeywordStatus,
   deleteKeyword,
 } = require('controllers/keywords');
-router.get('/', asyncErrorHandler(getKeywords));
+router.get('/', isAuth, asyncErrorHandler(getKeywords));
 router.patch('/:id', isAuth, asyncErrorHandler(editKeywordStatus));
 router.delete('/:id', isAuth, asyncErrorHandler(deleteKeyword));
 // TODO: for 測試用, 之後移除
