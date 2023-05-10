@@ -1,5 +1,6 @@
 const successHandler = require('service/successHandler');
 const errorHandler = require('service/errorHandler');
+const formatDate = require('service/formatDate');
 const Keyword = require('models/keywords');
 const keywords = {
   // TODO: for 測試用, 之後移除
@@ -15,19 +16,19 @@ const keywords = {
     if (status) query.status = status;
     if (startDate) {
       const start = new Date(startDate);
-      query.publishDate = { $gte: start };
+      query.updatedAt = { $gte: start };
     }
     if (endDate) {
       const end = new Date(endDate);
-      query.publishDate = query.publishDate || {};
-      query.publishDate.$lte = end;
+      query.updatedAt = query.updatedAt || {};
+      query.updatedAt.$lte = end;
     }
     const results = await Keyword.find(query).sort('rank').lean();
     const keywords = results.map((el) => {
-      const date = el.publishDate;
       return {
         ...el,
-        publishDate: new Date(date).toISOString().substring(0, 10),
+        createdAt: formatDate(el.createdAt),
+        updatedAt: formatDate(el.updatedAt),
       };
     });
     successHandler(res, keywords);
@@ -48,9 +49,8 @@ const keywords = {
         new: true,
       },
     ).lean();
-    theKeyword.publishDate = new Date(theKeyword.publishDate)
-      .toISOString()
-      .substring(0, 10);
+    theKeyword.createdAt = formatDate(theKeyword.createdAt);
+    theKeyword.updatedAt = formatDate(theKeyword.updatedAt);
     if (theKeyword) {
       successHandler(res, theKeyword);
     } else {
