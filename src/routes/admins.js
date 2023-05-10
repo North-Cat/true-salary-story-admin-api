@@ -17,8 +17,8 @@ router.post('/login', asyncErrorHandler(logIn));
 router.post('/logout', isAuth, asyncErrorHandler(logOut));
 router.get('/unconfirmedPosts', isAuth, asyncErrorHandler(getUnconfirmedPosts));
 router.get('/confirmedPosts', isAuth, asyncErrorHandler(getConfirmedPosts));
-router.post('/confirmPost', isAuth, asyncErrorHandler(confirmPost));
-router.post('/removePost', isAuth, asyncErrorHandler(removePost));
+router.post('/confirmPost/:id', isAuth, asyncErrorHandler(confirmPost));
+router.post('/removePost/:id', isAuth, asyncErrorHandler(removePost));
 // TODO: for 測試用, 之後移除
 router.post('/createPost', asyncErrorHandler(createPost));
 

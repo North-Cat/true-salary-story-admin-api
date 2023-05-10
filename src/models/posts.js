@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
 // TODO: 確認必填欄位
 const postSchema = new mongoose.Schema({
-  postId: {
-    type: String,
-  },
   title: {
     type: String,
     required: [true, '請輸入您的職位'],

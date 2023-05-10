@@ -51,17 +51,16 @@ const admins = {
     successHandler(res, posts);
   },
   async confirmPost(req, res, next) {
-    const postId = req.body?.postId;
+    const id = req.params?.id;
     const status = req.body?.status;
     const rejectReason = req.body?.rejectReason;
-    if (!postId || !status) {
+    if (!status) {
       return next(errorHandler(400, '欄位未填寫正確'));
     }
     if (status !== 'approved' && status !== 'rejected') {
       return next(errorHandler(400, '審核狀態只能是「已通過」或「已拒絕」'));
     }
     const data = {
-      postId,
       status,
       updateDate: new Date().toISOString(),
       updateUser: req.user,
@@ -72,7 +71,7 @@ const admins = {
       }
       data.rejectReason = rejectReason;
     }
-    const thePost = await Post.findOneAndUpdate({ postId: data.postId }, data, {
+    const thePost = await Post.findByIdAndUpdate(id, data, {
       new: true,
     });
     if (thePost) {
@@ -84,7 +83,7 @@ const admins = {
   async getConfirmedPosts(req, res) {
     const posts = await Post.find({ status: { $ne: 'pending' } })
       .select(
-        'postId title companyName taxId type status rejectReason createdAt updateDate updateUser',
+        'title companyName taxId type status rejectReason createdAt updateDate updateUser',
       )
       .populate({
         path: 'updateUser',
@@ -94,19 +93,18 @@ const admins = {
     successHandler(res, posts);
   },
   async removePost(req, res, next) {
-    const postId = req.body?.postId;
+    const id = req.params?.id;
     const rejectReason = req.body?.rejectReason;
-    if (!postId || !rejectReason) {
+    if (!rejectReason) {
       return next(errorHandler(400, '欄位未填寫正確'));
     }
     const data = {
-      postId,
       rejectReason,
       updateDate: new Date().toISOString(),
       updateUser: req.user,
       status: 'removed',
     };
-    const thePost = await Post.findOneAndUpdate({ postId: data.postId }, data, {
+    const thePost = await Post.findByIdAndUpdate(id, data, {
       new: true,
     });
     if (thePost) {
