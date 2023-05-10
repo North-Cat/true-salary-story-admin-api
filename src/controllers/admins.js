@@ -47,7 +47,18 @@ const admins = {
     successHandler(res, newPost);
   },
   async getUnconfirmedPosts(req, res) {
-    const posts = await Post.find({ status: 'pending' }).sort('createdAt');
+    const results = await Post.find({ status: 'pending' })
+      .sort('createdAt')
+      .lean();
+    const posts = results.map((el) => {
+      const createdAt = el.createdAt;
+      const updatedAt = el.updatedAt;
+      return {
+        ...el,
+        createdAt: new Date(createdAt).toISOString().substring(0, 10),
+        updatedAt: new Date(updatedAt).toISOString().substring(0, 10),
+      };
+    });
     successHandler(res, posts);
   },
   async confirmPost(req, res, next) {
@@ -62,7 +73,6 @@ const admins = {
     }
     const data = {
       status,
-      updateDate: new Date().toISOString(),
       updateUser: req.user,
     };
     if (status === 'rejected') {
@@ -73,7 +83,13 @@ const admins = {
     }
     const thePost = await Post.findByIdAndUpdate(id, data, {
       new: true,
-    });
+    }).lean();
+    thePost.createdAt = new Date(thePost.createdAt)
+      .toISOString()
+      .substring(0, 10);
+    thePost.updatedAt = new Date(thePost.updatedAt)
+      .toISOString()
+      .substring(0, 10);
     if (thePost) {
       successHandler(res, thePost);
     } else {
@@ -81,15 +97,25 @@ const admins = {
     }
   },
   async getConfirmedPosts(req, res) {
-    const posts = await Post.find({ status: { $ne: 'pending' } })
+    const results = await Post.find({ status: { $ne: 'pending' } })
       .select(
-        'title companyName taxId type status rejectReason createdAt updateDate updateUser',
+        'title companyName taxId type status rejectReason createdAt updatedAt updateUser',
       )
       .populate({
         path: 'updateUser',
         select: 'account',
       })
-      .sort('createdAt');
+      .sort('createdAt')
+      .lean();
+    const posts = results.map((el) => {
+      const createdAt = el.createdAt;
+      const updatedAt = el.updatedAt;
+      return {
+        ...el,
+        createDate: new Date(createdAt).toISOString().substring(0, 10),
+        updateDate: new Date(updatedAt).toISOString().substring(0, 10),
+      };
+    });
     successHandler(res, posts);
   },
   async removePost(req, res, next) {
@@ -100,13 +126,18 @@ const admins = {
     }
     const data = {
       rejectReason,
-      updateDate: new Date().toISOString(),
       updateUser: req.user,
       status: 'removed',
     };
     const thePost = await Post.findByIdAndUpdate(id, data, {
       new: true,
-    });
+    }).lean();
+    thePost.createdAt = new Date(thePost.createdAt)
+      .toISOString()
+      .substring(0, 10);
+    thePost.updatedAt = new Date(thePost.updatedAt)
+      .toISOString()
+      .substring(0, 10);
     if (thePost) {
       successHandler(res, thePost);
     } else {

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-// TODO: 確認必填欄位
 const postSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -88,24 +87,11 @@ const postSchema = new mongoose.Schema({
       return this.status === 'rejected';
     },
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    select: false,
-  },
-  createDate: {
-    type: Date,
-    default: Date.now,
-  },
-  updateDate: {
-    type: Date,
-    default: Date.now,
-  },
   updateUser: {
     type: mongoose.Schema.ObjectId,
     ref: 'Admin',
   },
-});
+}, { timestamps: true });
 
 const Post = mongoose.model('Post', postSchema);
 
