@@ -22,15 +22,12 @@ const keywords = {
       query.publishDate = query.publishDate || {};
       query.publishDate.$lte = end;
     }
-    const results = await Keyword.find(query).sort('rank');
+    const results = await Keyword.find(query).sort('rank').lean();
     const keywords = results.map((el) => {
-      const trimmedPublishDate = new Date(el.publishDate)
-        .toISOString()
-        .substring(0, 10);
-      const plainDataWithoutMongooseProperties = el.toObject();
+      const date = el.publishDate;
       return {
-        ...plainDataWithoutMongooseProperties,
-        publishDate: trimmedPublishDate,
+        ...el,
+        publishDate: new Date(date).toISOString().substring(0, 10),
       };
     });
     successHandler(res, keywords);
@@ -50,7 +47,10 @@ const keywords = {
       {
         new: true,
       },
-    );
+    ).lean();
+    theKeyword.publishDate = new Date(theKeyword.publishDate)
+      .toISOString()
+      .substring(0, 10);
     if (theKeyword) {
       successHandler(res, theKeyword);
     } else {
