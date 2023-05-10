@@ -5,6 +5,7 @@ const Post = require('models/posts');
 const { generateJWT } = require('service/auth');
 const successHandler = require('service/successHandler');
 const errorHandler = require('service/errorHandler');
+const formatDate = require('service/formatDate');
 const admins = {
   async signUp(req, res, next) {
     const account = req.body?.account;
