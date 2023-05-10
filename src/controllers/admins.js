@@ -52,12 +52,10 @@ const admins = {
       .sort('createdAt')
       .lean();
     const posts = results.map((el) => {
-      const createdAt = el.createdAt;
-      const updatedAt = el.updatedAt;
       return {
         ...el,
-        createdAt: new Date(createdAt).toISOString().substring(0, 10),
-        updatedAt: new Date(updatedAt).toISOString().substring(0, 10),
+        createdAt: formatDate(el.createdAt),
+        updatedAt: formatDate(el.updatedAt),
       };
     });
     successHandler(res, posts);
@@ -85,12 +83,8 @@ const admins = {
     const thePost = await Post.findByIdAndUpdate(id, data, {
       new: true,
     }).lean();
-    thePost.createdAt = new Date(thePost.createdAt)
-      .toISOString()
-      .substring(0, 10);
-    thePost.updatedAt = new Date(thePost.updatedAt)
-      .toISOString()
-      .substring(0, 10);
+    thePost.createdAt = formatDate(thePost.createdAt)
+    thePost.updatedAt = formatDate(thePost.updatedAt)
     if (thePost) {
       successHandler(res, thePost);
     } else {
@@ -109,12 +103,10 @@ const admins = {
       .sort('createdAt')
       .lean();
     const posts = results.map((el) => {
-      const createdAt = el.createdAt;
-      const updatedAt = el.updatedAt;
       return {
         ...el,
-        createDate: new Date(createdAt).toISOString().substring(0, 10),
-        updateDate: new Date(updatedAt).toISOString().substring(0, 10),
+        createdAt: formatDate(el.createdAt),
+        updatedAt: formatDate(el.updatedAt),
       };
     });
     successHandler(res, posts);
@@ -133,12 +125,8 @@ const admins = {
     const thePost = await Post.findByIdAndUpdate(id, data, {
       new: true,
     }).lean();
-    thePost.createdAt = new Date(thePost.createdAt)
-      .toISOString()
-      .substring(0, 10);
-    thePost.updatedAt = new Date(thePost.updatedAt)
-      .toISOString()
-      .substring(0, 10);
+    thePost.createdAt = formatDate(thePost.createdAt)
+    thePost.updatedAt = formatDate(thePost.updatedAt)
     if (thePost) {
       successHandler(res, thePost);
     } else {

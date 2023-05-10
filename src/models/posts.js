@@ -34,7 +34,7 @@ const postSchema = new mongoose.Schema(
       type: Number,
       required: [true, '請輸入您的總年資'],
     },
-    avgHoursPerday: {
+    avgHoursPerDay: {
       type: Number,
       required: [true, '請輸入您的日均工時'],
     },
