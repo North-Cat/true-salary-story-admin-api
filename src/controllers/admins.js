@@ -83,8 +83,8 @@ const admins = {
     const thePost = await Post.findByIdAndUpdate(id, data, {
       new: true,
     }).lean();
-    thePost.createdAt = formatDate(thePost.createdAt)
-    thePost.updatedAt = formatDate(thePost.updatedAt)
+    thePost.createdAt = formatDate(thePost.createdAt);
+    thePost.updatedAt = formatDate(thePost.updatedAt);
     if (thePost) {
       successHandler(res, thePost);
     } else {
@@ -125,8 +125,8 @@ const admins = {
     const thePost = await Post.findByIdAndUpdate(id, data, {
       new: true,
     }).lean();
-    thePost.createdAt = formatDate(thePost.createdAt)
-    thePost.updatedAt = formatDate(thePost.updatedAt)
+    thePost.createdAt = formatDate(thePost.createdAt);
+    thePost.updatedAt = formatDate(thePost.updatedAt);
     if (thePost) {
       successHandler(res, thePost);
     } else {
