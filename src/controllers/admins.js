@@ -49,7 +49,10 @@ const admins = {
   // TODO: for 測試用, 之後移除
   async createPost(req, res) {
     const newPost = await Post.create(req.body);
-    successHandler(res, newPost);
+    const newPostWithoutUnlockedUsers = await Post.findById(newPost.id).select(
+      '-unlockedUsers',
+    );
+    successHandler(res, newPostWithoutUnlockedUsers);
   },
   async getUnconfirmedPosts(req, res) {
     const results = await Post.find({ status: 'pending' })
