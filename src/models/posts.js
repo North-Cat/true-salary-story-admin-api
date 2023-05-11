@@ -56,16 +56,16 @@ const postSchema = new mongoose.Schema(
       type: Number,
     },
     overtime: {
-      type: String,
-      enum: ['準時上下班', '很少加班', '偶爾加班', '常常加班', '賣肝拼經濟'],
+      type: Number,
+      enum: [1, 2, 3, 4, 5],
       required: [true, '請輸入您的加班頻率'],
-      default: '很少加班',
+      default: 2,
     },
     feeling: {
-      type: String,
-      enum: ['非常開心', '還算愉快', '平常心', '有苦說不出', '想換工作了'],
+      type: Number,
+      enum: [1, 2, 3, 4, 5],
       required: [true, '請輸入您的上班心情'],
-      default: '還算愉快',
+      default: 2,
     },
     jobDescription: {
       type: String,
@@ -77,6 +77,10 @@ const postSchema = new mongoose.Schema(
     },
     tags: {
       type: [String],
+    },
+    unlockedUsers: {
+      type: [String],
+      select: false,
     },
     status: {
       type: String,
@@ -95,6 +99,32 @@ const postSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
+postSchema.set('toJSON', {
+  getters: true,
+});
+
+postSchema.path('overtime').get(function (num) {
+  const overtimeMap = {
+    1: '準時上下班',
+    2: '很少加班',
+    3: '偶爾加班',
+    4: '常常加班',
+    5: '賣肝拼經濟',
+  };
+  return overtimeMap[num];
+});
+
+postSchema.path('feeling').get(function (num) {
+  const feelingMap = {
+    1: '非常開心',
+    2: '還算愉快',
+    3: '平常心',
+    4: '有苦說不出',
+    5: '想換工作了',
+  };
+  return feelingMap[num];
+});
 
 const Post = mongoose.model('Post', postSchema);
 
