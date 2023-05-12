@@ -1,3 +1,4 @@
+const formatDate = require('service/formatDate');
 const mongoose = require('mongoose');
 const postSchema = new mongoose.Schema(
   {
@@ -127,6 +128,14 @@ postSchema.path('feeling').get(function (num) {
     5: '想換工作了',
   };
   return feelingMap[num];
+});
+
+postSchema.path('createdAt').get(function(date) {
+  return formatDate(date);
+});
+
+postSchema.path('updatedAt').get(function (date) {
+  return formatDate(date)
 });
 
 const Post = mongoose.model('Post', postSchema);

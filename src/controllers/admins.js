@@ -5,7 +5,6 @@ const Post = require('models/posts');
 const { generateJWT } = require('service/auth');
 const successHandler = require('service/successHandler');
 const errorHandler = require('service/errorHandler');
-const formatDate = require('service/formatDate');
 const admins = {
   async signUp(req, res, next) {
     const account = req.body?.account;
@@ -55,16 +54,7 @@ const admins = {
     successHandler(res, newPostWithoutUnlockedUsers);
   },
   async getUnconfirmedPosts(req, res) {
-    const results = await Post.find({ status: 'pending' })
-      .sort('createdAt')
-      .lean();
-    const posts = results.map((el) => {
-      return {
-        ...el,
-        createdAt: formatDate(el.createdAt),
-        updatedAt: formatDate(el.updatedAt),
-      };
-    });
+    const posts = await Post.find({ status: 'pending' }).sort('createdAt');
     successHandler(res, posts);
   },
   async confirmPost(req, res, next) {
@@ -89,9 +79,7 @@ const admins = {
     }
     const thePost = await Post.findByIdAndUpdate(id, data, {
       new: true,
-    }).lean();
-    thePost.createdAt = formatDate(thePost.createdAt);
-    thePost.updatedAt = formatDate(thePost.updatedAt);
+    });
     if (thePost) {
       successHandler(res, thePost);
     } else {
@@ -99,7 +87,7 @@ const admins = {
     }
   },
   async getConfirmedPosts(req, res) {
-    const results = await Post.find({ status: { $ne: 'pending' } })
+    const posts = await Post.find({ status: { $ne: 'pending' } })
       .select(
         'title companyName taxId type status rejectReason createdAt updatedAt updateUser',
       )
@@ -107,15 +95,7 @@ const admins = {
         path: 'updateUser',
         select: 'account',
       })
-      .sort('createdAt')
-      .lean();
-    const posts = results.map((el) => {
-      return {
-        ...el,
-        createdAt: formatDate(el.createdAt),
-        updatedAt: formatDate(el.updatedAt),
-      };
-    });
+      .sort('createdAt');
     successHandler(res, posts);
   },
   async removePost(req, res, next) {
@@ -131,9 +111,7 @@ const admins = {
     };
     const thePost = await Post.findByIdAndUpdate(id, data, {
       new: true,
-    }).lean();
-    thePost.createdAt = formatDate(thePost.createdAt);
-    thePost.updatedAt = formatDate(thePost.updatedAt);
+    });
     if (thePost) {
       successHandler(res, thePost);
     } else {
