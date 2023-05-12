@@ -46,6 +46,9 @@ const postSchema = new mongoose.Schema(
       type: Number,
       required: [true, '請輸入您的年薪'],
     },
+    yearEndBonus: {
+      type: Number,
+    },
     holidayBonus: {
       type: Number,
     },
