@@ -1,5 +1,5 @@
+const formatDate = require('service/formatDate');
 const mongoose = require('mongoose');
-
 const keywordSchema = new mongoose.Schema(
   {
     rank: {
@@ -22,6 +22,18 @@ const keywordSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
+keywordSchema.set('toJSON', {
+  getters: true,
+});
+
+keywordSchema.path('createdAt').get(function (date) {
+  return formatDate(date);
+});
+
+keywordSchema.path('updatedAt').get(function (date) {
+  return formatDate(date);
+});
 
 const Keyword = mongoose.model('Keyword', keywordSchema);
 

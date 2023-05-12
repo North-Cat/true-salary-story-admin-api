@@ -130,12 +130,12 @@ postSchema.path('feeling').get(function (num) {
   return feelingMap[num];
 });
 
-postSchema.path('createdAt').get(function(date) {
+postSchema.path('createdAt').get(function (date) {
   return formatDate(date);
 });
 
 postSchema.path('updatedAt').get(function (date) {
-  return formatDate(date)
+  return formatDate(date);
 });
 
 const Post = mongoose.model('Post', postSchema);
