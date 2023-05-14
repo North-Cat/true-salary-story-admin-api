@@ -1,5 +1,16 @@
 const formatDate = require('service/formatDate');
 const mongoose = require('mongoose');
+
+const salaryFieldsValidator = function () {
+  const hourlySalarySet = !!this.hourlySalary;
+  const dailySalarySet = !!this.dailySalary;
+  const monthlySalarySet = !!this.monthlySalary;
+
+  if (!hourlySalarySet && !dailySalarySet && !monthlySalarySet) {
+    throw new Error('請至少填寫「月薪」、「時薪」或「日薪」其中一項');
+  }
+};
+
 const postSchema = new mongoose.Schema(
   {
     title: {
@@ -37,11 +48,27 @@ const postSchema = new mongoose.Schema(
     },
     avgHoursPerDay: {
       type: Number,
-      required: [true, '請輸入您的日均工時'],
+      required: function () {
+        return !!this.hourlySalary;
+      },
+    },
+    avgWorkingDaysPerMonth: {
+      type: Number,
+      required: function () {
+        return !!this.hourlySalary || !!this.dailySalary;
+      },
+    },
+    hourlySalary: {
+      type: Number,
+      validate: salaryFieldsValidator,
+    },
+    dailySalary: {
+      type: Number,
+      validate: salaryFieldsValidator,
     },
     monthlySalary: {
       type: Number,
-      required: [true, '請輸入您的月薪'],
+      validate: salaryFieldsValidator,
     },
     yearlySalary: {
       type: Number,
@@ -82,8 +109,16 @@ const postSchema = new mongoose.Schema(
     tags: {
       type: [String],
     },
-    unlockedUsers: {
+    customTags: {
       type: [String],
+    },
+    unlockedUsers: {
+      type: [
+        {
+          type: mongoose.Schema.ObjectId,
+          ref: 'User',
+        },
+      ],
       select: false,
     },
     status: {
@@ -99,6 +134,9 @@ const postSchema = new mongoose.Schema(
     updateUser: {
       type: mongoose.Schema.ObjectId,
       ref: 'Admin',
+    },
+    seen: {
+      type: Number,
     },
   },
   { timestamps: true },
