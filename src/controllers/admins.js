@@ -16,7 +16,7 @@ const admins = {
       return next(errorHandler(400, '密碼不得低於 8 字元'));
     }
     const foundAdmin = await Admin.findOne({ account });
-    if (Object.keys(foundAdmin).length) {
+    if (foundAdmin) {
       return next(errorHandler(400, '此帳號已被註冊'));
     }
     password = await bcrypt.hash(password, 12);
