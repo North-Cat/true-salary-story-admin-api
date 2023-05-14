@@ -16,18 +16,25 @@ const isAuth = asyncErrorHandler(async (req, res, next) => {
   if (!token) {
     return next(errorHandler(401, '尚未登入'));
   }
-  const decoded = await new Promise((resolve, reject) => {
-    jwt.verify(token, config.jwt.secret, (err, payload) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(payload);
-      }
+  try {
+    const decoded = await new Promise((resolve, reject) => {
+      jwt.verify(token, config.jwt.secret, (err, payload) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(payload);
+        }
+      });
     });
-  });
-  const currentUser = await Admin.findById(decoded.id);
-  req.user = currentUser;
-  next();
+    const currentUser = await Admin.findById(decoded.id);
+    req.user = currentUser;
+    next();
+  } catch (err) {
+    if (err instanceof jwt.TokenExpiredError) {
+      return next(errorHandler(401, '登入已過期'));
+    }
+    return next(errorHandler(401, '驗證失敗'));
+  }
 });
 
 const generateJWT = (user, res) => {
