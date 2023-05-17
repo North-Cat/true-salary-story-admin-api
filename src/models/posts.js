@@ -13,18 +13,19 @@ const salaryFieldsValidator = function () {
 
 const postSchema = new mongoose.Schema(
   {
-    title: {
+    taxId: {
       type: String,
-      required: [true, '請輸入您的職位'],
+      required: [true, '請輸入統一編號'],
     },
     companyName: {
       type: String,
       required: [true, '請輸入您的公司名稱'],
     },
-    taxId: {
+    title: {
       type: String,
+      required: [true, '請輸入您的職位'],
     },
-    type: {
+    employmentType: {
       type: String,
       enum: ['全職', '兼職', '實習', '約聘', '派遣'],
       default: '全職',
@@ -33,6 +34,7 @@ const postSchema = new mongoose.Schema(
     inService: {
       type: Boolean,
       default: true,
+      required: true,
     },
     city: {
       type: String,
@@ -46,11 +48,13 @@ const postSchema = new mongoose.Schema(
       type: Number,
       required: [true, '請輸入您的總年資'],
     },
-    avgHoursPerDay: {
+    monthlySalary: {
       type: Number,
-      required: function () {
-        return !!this.hourlySalary;
-      },
+      validate: salaryFieldsValidator,
+    },
+    dailySalary: {
+      type: Number,
+      validate: salaryFieldsValidator,
     },
     avgWorkingDaysPerMonth: {
       type: Number,
@@ -62,17 +66,11 @@ const postSchema = new mongoose.Schema(
       type: Number,
       validate: salaryFieldsValidator,
     },
-    dailySalary: {
+    avgHoursPerDay: {
       type: Number,
-      validate: salaryFieldsValidator,
-    },
-    monthlySalary: {
-      type: Number,
-      validate: salaryFieldsValidator,
-    },
-    yearlySalary: {
-      type: Number,
-      required: [true, '請輸入您的年薪'],
+      required: function () {
+        return !!this.hourlySalary;
+      },
     },
     yearEndBonus: {
       type: Number,
@@ -85,6 +83,10 @@ const postSchema = new mongoose.Schema(
     },
     otherBonus: {
       type: Number,
+    },
+    yearlySalary: {
+      type: Number,
+      required: [true, '請輸入您的年薪'],
     },
     overtime: {
       type: Number,
@@ -124,6 +126,7 @@ const postSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ['pending', 'approved', 'rejected', 'removed'],
+      default: 'pending',
     },
     rejectReason: {
       type: String,
@@ -131,15 +134,19 @@ const postSchema = new mongoose.Schema(
         return this.status === 'rejected';
       },
     },
+    seen: { type: Number, default: 0 },
+    createUser: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+    },
+    createDate: { type: Date, default: Date.now },
     updateUser: {
       type: mongoose.Schema.ObjectId,
       ref: 'Admin',
     },
-    seen: {
-      type: Number,
-    },
+    updateDate: { type: Date, default: Date.now },
   },
-  { timestamps: true },
+  { versionKey: false, timestamps: true },
 );
 
 postSchema.set('toJSON', {
