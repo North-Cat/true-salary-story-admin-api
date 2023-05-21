@@ -89,7 +89,7 @@ const admins = {
   async getConfirmedPosts(req, res) {
     const posts = await Post.find({ status: { $ne: 'pending' } })
       .select(
-        'title companyName taxId type status rejectReason createdAt updatedAt updateUser',
+        'title companyName taxId employmentType status rejectReason createdDate updateDate updateUser',
       )
       .populate({
         path: 'updateUser',
