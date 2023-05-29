@@ -57,7 +57,7 @@ const admins = {
     const page = req.query?.page || 1;
     const limit = req.query?.limit || 10;
     const posts = await Post.find({ status: 'pending' })
-      .skip((page - 1) * page)
+      .skip((page - 1) * limit)
       .limit(limit)
       .sort('createdAt');
     successHandler(res, posts);
@@ -102,7 +102,7 @@ const admins = {
         path: 'updateUser',
         select: 'account',
       })
-      .skip((page - 1) * page)
+      .skip((page - 1) * limit)
       .limit(limit)
       .sort('createdAt');
     successHandler(res, posts);

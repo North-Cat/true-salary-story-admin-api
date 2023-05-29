@@ -25,7 +25,7 @@ const keywords = {
       query.updatedAt.$lte = end;
     }
     const keywords = await Keyword.find(query)
-      .skip((page - 1) * page)
+      .skip((page - 1) * limit)
       .limit(limit)
       .sort('rank');
     successHandler(res, keywords);
