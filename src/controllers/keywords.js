@@ -11,6 +11,8 @@ const keywords = {
     const startDate = req.query?.startDate;
     const endDate = req.query?.endDate;
     const status = req.query?.status;
+    const page = req.query?.page || 1;
+    const limit = req.query?.limit || 10;
     const query = {};
     if (status) query.status = status;
     if (startDate) {
@@ -22,7 +24,10 @@ const keywords = {
       query.updatedAt = query.updatedAt || {};
       query.updatedAt.$lte = end;
     }
-    const keywords = await Keyword.find(query).sort('rank');
+    const keywords = await Keyword.find(query)
+      .skip((page - 1) * page)
+      .limit(limit)
+      .sort('rank');
     successHandler(res, keywords);
   },
   async editKeywordStatus(req, res, next) {

@@ -12,13 +12,24 @@ const {
   removePost,
 } = require('controllers/admins');
 const { isAuth } = require('service/auth');
+const objectIdValidator = require('service/objectIdValidator');
 router.post('/signup', asyncErrorHandler(signUp));
 router.post('/login', asyncErrorHandler(logIn));
 router.post('/logout', isAuth, asyncErrorHandler(logOut));
 router.get('/unconfirmedPosts', isAuth, asyncErrorHandler(getUnconfirmedPosts));
 router.get('/confirmedPosts', isAuth, asyncErrorHandler(getConfirmedPosts));
-router.post('/confirmPost/:id', isAuth, asyncErrorHandler(confirmPost));
-router.post('/removePost/:id', isAuth, asyncErrorHandler(removePost));
+router.post(
+  '/confirmPost/:id',
+  isAuth,
+  objectIdValidator,
+  asyncErrorHandler(confirmPost),
+);
+router.post(
+  '/removePost/:id',
+  isAuth,
+  objectIdValidator,
+  asyncErrorHandler(removePost),
+);
 // TODO: for 測試用, 之後移除
 router.post('/createPost', asyncErrorHandler(createPost));
 

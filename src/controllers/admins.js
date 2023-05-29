@@ -54,7 +54,12 @@ const admins = {
     successHandler(res, newPostWithoutUnlockedUsers);
   },
   async getUnconfirmedPosts(req, res) {
-    const posts = await Post.find({ status: 'pending' }).sort('createdAt');
+    const page = req.query?.page || 1;
+    const limit = req.query?.limit || 10;
+    const posts = await Post.find({ status: 'pending' })
+      .skip((page - 1) * page)
+      .limit(limit)
+      .sort('createdAt');
     successHandler(res, posts);
   },
   async confirmPost(req, res, next) {
@@ -87,6 +92,8 @@ const admins = {
     }
   },
   async getConfirmedPosts(req, res) {
+    const page = req.query?.page || 1;
+    const limit = req.query?.limit || 10;
     const posts = await Post.find({ status: { $ne: 'pending' } })
       .select(
         'title companyName taxId employmentType status rejectReason createdDate updateDate updateUser',
@@ -95,6 +102,8 @@ const admins = {
         path: 'updateUser',
         select: 'account',
       })
+      .skip((page - 1) * page)
+      .limit(limit)
       .sort('createdAt');
     successHandler(res, posts);
   },
