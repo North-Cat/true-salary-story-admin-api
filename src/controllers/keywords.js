@@ -27,7 +27,7 @@ const keywords = {
     const keywords = await Keyword.find(query)
       .skip((page - 1) * limit)
       .limit(limit)
-      .sort('rank');
+      .sort({ rank: -1 });
     successHandler(res, keywords);
   },
   async editKeywordStatus(req, res, next) {

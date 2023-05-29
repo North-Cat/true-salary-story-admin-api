@@ -59,7 +59,7 @@ const admins = {
     const posts = await Post.find({ status: 'pending' })
       .skip((page - 1) * limit)
       .limit(limit)
-      .sort('createdAt');
+      .sort({ createDate: -1 });
     successHandler(res, posts);
   },
   async confirmPost(req, res, next) {
@@ -75,6 +75,7 @@ const admins = {
     const data = {
       status,
       updateUser: req.user,
+      updateDate: new Date().toISOString,
     };
     if (status === 'rejected') {
       if (!rejectReason) {
@@ -96,7 +97,7 @@ const admins = {
     const limit = req.query?.limit || 10;
     const posts = await Post.find({ status: { $ne: 'pending' } })
       .select(
-        'title companyName taxId employmentType status rejectReason createdDate updateDate updateUser',
+        'title companyName employmentType status rejectReason updateDate updateUser',
       )
       .populate({
         path: 'updateUser',
@@ -104,7 +105,7 @@ const admins = {
       })
       .skip((page - 1) * limit)
       .limit(limit)
-      .sort('createdAt');
+      .sort({ updatedDate: -1 });
     successHandler(res, posts);
   },
   async removePost(req, res, next) {
@@ -117,6 +118,7 @@ const admins = {
       rejectReason,
       updateUser: req.user,
       status: 'removed',
+      updateDate: new Date().toISOString,
     };
     const thePost = await Post.findByIdAndUpdate(id, data, {
       new: true,
