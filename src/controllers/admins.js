@@ -56,11 +56,17 @@ const admins = {
   async getUnconfirmedPosts(req, res) {
     const page = req.query?.page || 1;
     const limit = req.query?.limit || 10;
-    const posts = await Post.find({ status: 'pending' })
+    const rule = { status: 'pending' };
+    const posts = await Post.find(rule)
       .skip((page - 1) * limit)
       .limit(limit)
       .sort({ createDate: -1 });
-    successHandler(res, posts);
+    const totalCount = await Post.countDocuments(rule);
+    const data = {
+      posts,
+      totalCount,
+    };
+    successHandler(res, data);
   },
   async confirmPost(req, res, next) {
     const id = req.params?.id;
@@ -95,7 +101,8 @@ const admins = {
   async getConfirmedPosts(req, res) {
     const page = req.query?.page || 1;
     const limit = req.query?.limit || 10;
-    const posts = await Post.find({ status: { $ne: 'pending' } })
+    const rule = { status: { $ne: 'pending' } };
+    const posts = await Post.find(rule)
       .select(
         'title companyName employmentType status rejectReason updateDate updateUser',
       )
@@ -106,7 +113,12 @@ const admins = {
       .skip((page - 1) * limit)
       .limit(limit)
       .sort({ updatedDate: -1 });
-    successHandler(res, posts);
+    const totalCount = await Post.countDocuments(rule);
+    const data = {
+      posts,
+      totalCount,
+    };
+    successHandler(res, data);
   },
   async removePost(req, res, next) {
     const id = req.params?.id;

@@ -28,7 +28,12 @@ const keywords = {
       .skip((page - 1) * limit)
       .limit(limit)
       .sort({ rank: -1 });
-    successHandler(res, keywords);
+    const totalCount = await Keyword.countDocuments(query);
+    const data = {
+      keywords,
+      totalCount,
+    };
+    successHandler(res, data);
   },
   async editKeywordStatus(req, res, next) {
     const id = req.params?.id;
