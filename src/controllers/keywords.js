@@ -21,6 +21,7 @@ const keywords = {
     }
     if (endDate) {
       const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999);
       query.updatedAt = query.updatedAt || {};
       query.updatedAt.$lte = end;
     }
