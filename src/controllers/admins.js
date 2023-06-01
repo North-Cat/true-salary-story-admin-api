@@ -75,7 +75,7 @@ const admins = {
     const data = {
       status,
       updateUser: req.user,
-      updateDate: new Date().toISOString,
+      updateDate: new Date().toISOString(),
     };
     if (status === 'rejected') {
       if (!rejectReason) {
@@ -118,7 +118,7 @@ const admins = {
       rejectReason,
       updateUser: req.user,
       status: 'removed',
-      updateDate: new Date().toISOString,
+      updateDate: new Date().toISOString(),
     };
     const thePost = await Post.findByIdAndUpdate(id, data, {
       new: true,
