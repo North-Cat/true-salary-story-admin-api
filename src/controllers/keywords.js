@@ -28,7 +28,7 @@ const keywords = {
     const keywords = await Keyword.find(query)
       .skip((page - 1) * limit)
       .limit(limit)
-      .sort({ rank: -1 });
+      .sort({ updatedAt: -1 });
     const totalCount = await Keyword.countDocuments(query);
     const data = {
       keywords,
