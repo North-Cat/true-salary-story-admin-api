@@ -112,7 +112,7 @@ const admins = {
       })
       .skip((page - 1) * limit)
       .limit(limit)
-      .sort({ updatedDate: -1 });
+      .sort({ updateDate: -1 });
     const totalCount = await Post.countDocuments(rule);
     const data = {
       posts,
